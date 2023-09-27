@@ -1,3 +1,4 @@
+
 /*----- constants -----*/
 const winningCombos = [
   [0, 1, 2],
@@ -14,10 +15,11 @@ const winningCombos = [
 let board;
 let turn = 'X';
 let win;
-
+let lastX = 0;
 /*----- cached element references -----*/
 const squares = Array.from(document.querySelectorAll('#board div'));
 const messages = document.querySelector('h2');
+
 
 /*----- event listeners -----*/
 document.getElementById('board').addEventListener('click', handleTurn);
@@ -52,18 +54,34 @@ function render() {
 
     squares[index].textContent = mark;
 
-    console.log(mark, index);
   });
 
 messages.textContent = win === 'T' ? `That's a tie, queen!` : win ? `${win} wins the game!` : `It's ${turn}'s turn!`;
+
+  if(messages.innerText.includes('wins')){
+    confetti({
+  particleCount: 100,
+  startVelocity: 30,
+  spread: 360,
+  origin: {
+    x: Math.random(),
+    y: Math.random() - 0.2
+  }
+});
+  }
 };
+
 
 function getWinner() {
   let winner = null;
   winningCombos.forEach(function(combo, index) {
-    if (board[combo[0]] && board[combo[0]] === board[combo[1]] && board[combo[0]] === board[combo[2]]) winner = board[combo[0]];
+    if (board[combo[0]] && board[combo[0]] === board[combo[1]] && board[combo[0]] === board[combo[2]]) 
+      winner = board[combo[0]];
+
   });
+  
   return winner ? winner : board.includes('') ? null : 'T';
 
 }
+
 
